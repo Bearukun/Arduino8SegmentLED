@@ -1,32 +1,42 @@
-// Create byte array of character codes for the numbers 0-9
-byte Digital[10]={0xfc,0x60,0xda,0xf2,0x66,0xb6,0xbe,0xe0,0xfe,0xf6};
+//Arduino pin: 2,3,4,5,6,7,8
+byte seven_seg_digits[10][7] = { { 0,0,0,0,0,0,0 },  // = 0
+{ 1,0,0,1,1,1,1 },  // = 1
+{ 0,0,1,0,0,1,0 },  // = 2
+{ 0,0,0,0,1,1,0 },  // = 3
+{ 1,0,0,1,1,0,0 },  // = 4
+{ 0,1,0,0,1,0,0 },  // = 5
+{ 0,1,0,0,0,0,0 },  // = 6
+{ 0,0,0,1,1,1,1 },  // = 7
+{ 0,0,0,0,0,0,0 },  // = 8
+{ 0,0,0,1,1,0,0 }   // = 9
+};
 
-void setup()
-{
-  //We are going start at pin
-  int i=2;
-  //Loop every pin to setup
-  for(i=2;i<10;i++)
-  {
-   pinMode(i,OUTPUT);
-   digitalWrite(i,HIGH);
-  }
+
+void setup() {               
+pinMode(2, OUTPUT); //A
+pinMode(3, OUTPUT); //B
+pinMode(4, OUTPUT); //C
+pinMode(5, OUTPUT); //D
+pinMode(6, OUTPUT); //E
+pinMode(7, OUTPUT); //F
+pinMode(8, OUTPUT); //G
+pinMode(9, OUTPUT); //Dot
+
 }
-void loop()
-{
-  int i=0;
-  int j;
-  //Display number 1-9
-  for(i=0;i<10;i++)
-  {  
-    //for every number, send the character code to the digital pin
-    for(j=0;j<8;j++)
-   {  
-    if(Digital[i]&1<<j)
-    digitalWrite(9-j,LOW);
-    else
-    digitalWrite(9-j,HIGH);
-    }
-    delay(500);
-  }
+
+void sevenSegWrite(byte digit) {
+byte pin = 2;
+for (byte segCount = 0; segCount < 7; ++segCount) {
+digitalWrite(pin, seven_seg_digits[digit][segCount]);
+++pin;
+}
+}
+
+void loop() {
+for (byte count = 10; count > 0; --count) {
+delay(1000);
+sevenSegWrite(count - 1); 
+}
+delay(4000);
+
 }
